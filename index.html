@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+<!--I have not used traversing as i do not have too many html tags. There are some ways in which i can use that but that will make code more unreadable. so i prefered not to use that. I did used traversing in past assignments such as children() and siblings().-->
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script>
+        //name of location to perform tracking
+        const tent="Tent",mainMap="Main Map",inTent="In Tent",beach="Beach",house1="House1";
+        var loc = mainMap;//current location
+        var enteredScene=0;
+        var prevLocationInBound;//still in range of previous location?
+        var prevLocation;//last location
+        
+                    var tvInBound=false;//in location of tv
+        $(document).ready(function() {
+            $(document).keydown(function(btn) {//each time key is pressed keydown is going to get called
+                var screenWidth = $(window).width();//width of screen in px
+                var screenHeight = $(window).height();//height of screen in px
+                var btm1 = $("#player").css("bottom").slice(0, $("#player").css("bottom").length - 2);//player location
+                var lft1 = $("#player").css("left").slice(0, $("#player").css("left").length - 2);//player location
+                console.log("lft" + lft1);//console check
+                console.log("wid:" + screenWidth);//console check
+                
+//                if (screenWidth)
+                    //                   alert(btn.keyCode);
+                    switch (btn.keyCode) {//checks keycode
+                        case 81://q
+                            if(loc==inTent){//if mario is in tent then go to it's previous location
+                                prevLocation=loc;//make current location as a previous location
+                                if(loc==inTent){
+                                    if (btm1 > 480 && btm1 < 550 && lft1 > 710 && lft1 < 790){//if plyaer did not move
+                                        prevLocationInBound=true;
+                                    }
+                                }
+                                loc = tent;//change location
+                                $("#player").animate({//animate player to normal size in 4 seconds
+                                    width: "50px",
+                                    height: "50px"
+                                }, 4000)
+                                
+                                $("#back").fadeOut(2000).promise().done(function() {//transition of image smoothly
+//                                    $("#back").css("content", "url(camp/camp3.jpg)");
+                                     $("#back").attr("src", "camp/camp3.jpg");//change attribute src to camp image
+                                    
+                                    $("#back").fadeIn(2000);
+
+                                })
+                                
+                            }else if(loc==tent || loc==beach){//in beach or tent?
+                                prevLocation=loc;
+                                if(loc==tent){//if tent
+                                    if (btm1 > 170 && btm1 < 270 && lft1 > 630 && lft1 < 800){//if plyaer did not move
+                                        prevLocationInBound=true;
+                                        //alert("In Bound")
+                                    }
+                                }
+                                if(loc==beach){//if brach
+                                    if (btm1 > 35 && btm1 < 170 && lft1 > 178 && lft1 < 270){//if plyaer did not move
+                                        prevLocationInBound=true;
+                                        //alert("In Bound")
+                                    }
+                                }
+                                loc = mainMap;
+                                $("#player").animate({
+                                    width: "50px",
+                                    height: "50px"
+                                }, 4000)
+                                
+                                $("#back").fadeOut(2000).promise().done(function() {
+//                                    $("#back").css("content", "url(map/map1.jpg)");
+                                    $("#back").attr("src", "map/map1.jpg");
+                                    
+                                    $("#back").fadeIn(2000);
+
+                                })
+                                
+                            }else if(loc==house1){
+                                prevLocation=loc;
+                                if(loc==house1){
+                                    if (btm1 >= 330 && btm1 <= 370 && lft1 > 1045 && lft1 < 1080){//if plyaer did not moved
+                                        prevLocationInBound=true;
+                                    }
+                                }
+                                loc = beach;
+                                $("#back").fadeOut(2000).promise().done(function() {
+//                                    $("#back").css("content", "url(camp/camp3.jpg)");
+                                     $("#back").attr("src", "beach/beachView4.gif");
+                                    
+                                    $("#back").fadeIn(2000);
+
+                                })
+                            }
+                            break;
+                        case 40://down
+                            if (0 > (Number(btm1))) {//out of screen side
+                                return;
+                            }
+                            $("#player").animate({//bottom 10 px
+                                bottom: "-=10px"
+                            }, 0)
+                            break;
+                        case 39://right
+                            if (screenWidth < (Number(lft1) + Number($("#player").width()))) {//out of screen side
+                                return;
+                            }
+                            $("#player").animate({//right 10 px
+                                left: "+=10px"
+                            }, 0)
+                            break;
+                        case 37://left
+                            if (0 > (Number(lft1))) {//out of screen side
+                                return;
+                            }
+                            $("#player").animate({//left 10 px
+                                left: "-=10px"
+                            }, 0)
+                            break;
+                        case 38://up
+                             if (screenHeight < (Number(btm1)+Number($("#player").height()))) {//out of screen side
+                                return;
+                            }
+                            $("#player").animate({//top 10 px
+                                bottom: "+=10px"
+                            }, 0)
+                            break;
+                    }
+                //after movement..
+                const btm = $("#player").css("bottom").slice(0, $("#player").css("bottom").length - 2);//get location of player
+                const lft = $("#player").css("left").slice(0, $("#player").css("left").length - 2);//location of player
+                console.log(btm);//print
+                console.log(lft);//print
+                //if location is main map
+                if (loc == mainMap) {
+                    //location is in this bounds
+                    if (btm > 170 && btm < 270 && lft > 630 && lft < 800) {
+                       //already there
+                        if(prevLocation==tent && prevLocationInBound){return;}
+                        loc = tent;//change the location
+                        //alert("in");
+                        //debugger;
+                        $("#back").fadeOut(2000).promise().done(function() {//image transition smothly
+                            //$("#back").css("content", "");
+                            $("#back").attr("src", "camp/camp3.jpg");//change image
+                            
+                            $("#back").fadeIn(2000);//fade in
+                            setTimeout(function(){
+                                alert("open the door to go inside the tent. or press Q for exit.")
+                            },5000);
+                            //disp=false;
+
+                        })
+                    }//another location
+                    else if (btm > 35 && btm < 170 && lft > 178 && lft < 270) {
+                        if(prevLocation==beach && prevLocationInBound){return;}//already there
+                        loc = beach;//change location
+                            
+                        //alert("in");
+                        //debugger;
+                        $("#back").fadeOut(2000).promise().done(function() {//fading out smoothly
+                            //$("#back").css("content", "url(beach/beachView3.png)");
+                            $("#back").attr("src", "beach/beachView4.gif");//change image
+                            
+                            let msg="You can visit a house here!!!"
+                            $("#back").fadeIn(2000)
+                            
+                            //if(!disp){
+                                setTimeout(function(){
+                                    alert(msg);
+                                },5000);
+                              //  disp=true;
+                            //}
+//                            alert("Wanna enter in a beach?");
+                        });
+//                        alert("Wanna enter in a beach?");
+
+
+                    }
+                    else{
+                        prevLocationInBound=false;
+                    }
+                }
+                //same as above... checks location boundry and if fits, change location and smooth transition applied
+                if (loc == tent) {
+
+                    if (btm > 480 && btm < 550 && lft > 710 && lft < 790) {
+                        if(prevLocation==inTent && prevLocationInBound){return;}
+                        loc = inTent;
+                        //alert("in");
+                        $("#player").animate({//increase size of plauer and location will also get changed
+                            width: "250px",
+                            height: "250px",
+                            left: "1000px",
+                            bottom: "200px"
+                        }, 4000)
+                        $("#back").fadeOut(2000).promise().done(function() {
+                            //$("#back").css("content", "url(camp/camp3IN.jpg)");
+                            $("#back").attr("src", "camp/camp3IN.jpg");
+                            $("#back").fadeIn(2000);
+                            setTimeout(function(){
+                                alert("Seems like they are working on some confidential project.. lets not disturb them... Press Q to go back..")
+                            },5000);
+                        });
+
+
+                    }
+                    else{
+                        //if(prevLocation!=tent)//previous location must be inTent
+                            prevLocationInBound=false;
+                    }
+                }
+                //same as above... checks location boundry and if fits, change location and smooth transition applied
+                if (loc==beach){
+                    if (btm >= 330 && btm <= 370 && lft > 1045 && lft < 1080) {
+                        if(prevLocation==house1 && prevLocationInBound){return;}
+                        loc = house1;
+                        $("#back").fadeOut(2000).promise().done(function() {
+                            //$("#back").css("content", "url(camp/camp3IN.jpg)");
+                            $("#back").attr("src", "beach/house/beachHouse2.jpg");
+                            $("#back").fadeIn(2000);
+                            setTimeout(function(){
+                                alert("There's some news going on... lets watch tv.. or press Q for exit.")
+                            },3000);
+                        });
+
+
+                    }
+                    else{
+                        //if(prevLocation!=beach)//previous location must be house1
+                            prevLocationInBound=false;
+                    }
+                }
+                
+                if (loc==house1){
+                    if (btm >=310  && btm <= 380 && lft > 670 && lft < 850) {
+                        if(tvInBound){return;}
+                        tvInBound=true;
+                        $("#tv").fadeIn(2000);
+                    }else{
+                        tvInBound=false;
+                    }
+                }
+            });
+            //if button 1 click.. tv
+            $("#btn-1").click(function(){
+                $("#tv").fadeOut(2000);
+            });
+        });
+        //msg display
+        function showMessage(msg,timeout){
+            setTimeout(function(){
+                                alert(msg)
+                            },timeout*1000);
+        }
+    </script>
+    <style>
+        body {
+            overflow: hidden;
+            background-color: black;
+        }
+
+        #back {
+            position: absolute;
+/*            content: url(map/map1.jpg);*/
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            left: 0;
+            bottom: 0;
+
+        }
+
+/*
+        div {
+            background-image: url(person/mario.png);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+            z-index: 10;
+        }
+*/
+        #tv{
+            padding: 3%;
+            top: 10%;
+            left: 25%;
+            width: 50%;
+            height: auto;
+            display: none;
+            position: absolute;
+            color: red;
+            background-color: darkslategray;
+            border-radius: 20px;
+        }
+        #channel{
+            position: relative;
+            width: 94%;
+            margin: 3%;
+            border-radius: 5px;
+        }
+        h2{
+            padding: 0;
+            margin: 0;
+        }
+        #btn-1,#btn-2,#btn-3{
+            position: relative;
+            display: inline-block;
+            
+            width: 20px;
+            height: 20px;
+            margin: 10px;
+            background-color: red;
+            float: right;
+            color: aliceblue;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <img id="back" src="map/map1.jpg" />
+    <img id="player" src="person/mario.png" style="height:50px;width:50px;position:absolute;" />
+    <div id="tv" >
+        <center><h2>LIVE NEWS</h2></center>
+        <img id="channel" src="beach/house/tv/channel1.gif" />
+        <div id="btn-1" >E</div>
+<!--        <div id="btn-2"></div><div id="btn-3"></div>-->
+    </div>
+    
+</body>
+
+</html>
