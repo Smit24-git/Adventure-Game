@@ -6,3 +6,5 @@ press q to exit the current scene
 in first scene there are 2 places you can visit.
 - a tent which is in middle
 - a house which is in bottom left
+
+Note: it is still under development... may not work in different screen resolutions at this moment..
